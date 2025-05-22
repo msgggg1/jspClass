@@ -1,15 +1,23 @@
+<%@page import="java.util.Objects"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-
-	String pNum = request.getParameter("num"); 
-	int num = 0;
+<%	
+	String pN = request.getParameter("n"); 
+	String pM = request.getParameter("m"); 
+	// if( pNum == null)  pNum = ""; 
+	int n = 0, m = 0;
 	String content = "";
-	if(pNum != null && !pNum.equals("")){
-		num = Integer.parseInt(pNum);	
-%>
-<%
+	
+	if(pN != null && !pN.equals("")
+			&& pM != null && !pM.equals("")
+			){
+		n = Integer.parseInt(pN);	
+		m = Integer.parseInt(pM);	
+		
+		int min = Math.min(n,m);
+		int max = Math.max(n,m);
+		
 	int sum = 0;
-	for(int i = 1; i <= num ; i++){
+	for(int i = min; i <= max ; i++){
 		content += String.format("%d+", i);
 		sum+= i ;
 		}
@@ -23,7 +31,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="shortcut icon" type="image/x-icon" href="http://localhost/jspPro/images/SiSt.ico">
-<title>2025. 5. 21. 오후 5:12:46</title>
+<title>2025. 5. 21. 오후 3:03:40</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <link rel="stylesheet" href="http://localhost/jspPro/resources/cdn-main/example.css">
 <script src="http://localhost/jspPro/resources/cdn-main/example.js"></script>
@@ -35,7 +43,7 @@
 </head>
 <body>
 <header>
-  <h1 class="main"><a href="#" style="position: absolute;top:30px;">kEnik HOme</a></h1>
+  <h1 class="main"><a href="#" style="position: absolute;top:30px;">msg HOme</a></h1>
   <ul>
     <li><a href="#">로그인</a></li>
     <li><a href="#">회원가입</a></li>
@@ -43,19 +51,21 @@
 </header>
 <div>
   <xmp class="code"> 
-    ex04_02.jsp 를 form 태그로 서브밋 수정.
+  	js or jquery 사용
   </xmp>
-<form action="ex04_03.jsp">
- 정수 : <input type="text" id="num" name="num" autofocus >
-  </form>
+  <form action="">
+ 정수 1(n): <input type="text" id="n" name="n" autofocus >
+ 정수 2(m): <input type="text" id="m" name="m"  >
   <br>
+  <input type="button" value="제출">
+  </form>
   <p id="demo"><%=content %></p>
+  <!-- 숫자만 입력되게, 엔터치면 입력받은 숫자까지의 함 -->
 </div>
 
 <script>
-	$("#num")
+	$("#n, #m")
 		.css("text-align", "center")
-		.val('${param.num}')
 		.on({
 				"keydown": function(e){
 					// 취소O
@@ -72,18 +82,25 @@
 					}
 				}
 				,"keyup": function(e){
+					//이벤트 취소 못함
 					if (e.which == 13) {
 						
 						let n = $(this).val();
 						if (n) {
-							$("form").submit();
+							$(this).next().select();
 						} else{
 							alert("정수 입력하세요!")
 						}
 					} // if
 				}
-		})
-		.select();
+		});
+	
+	$(":button").on("click", function(){
+		$("form").submit();
+	});
+	
+	$("#n").val(${param.n}).select();
+	$("#m").val(${param.m});
 </script>
 </body>
 </html>
