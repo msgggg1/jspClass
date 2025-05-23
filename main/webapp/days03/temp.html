@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insert title here</title>
+<link rel="shortcut icon" type="image/x-icon" href="http://localhost/webPro/images/SiSt.ico">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet" href="../../resources/cdn-main/example.css">
+<script src="../../resources/cdn-main/example.js"></script>
+<style>
+  span.material-symbols-outlined {
+    vertical-align: text-bottom;
+  }
+  tbody tr td:first-child{
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1 class="main"><a href="#" style="position: absolute;top:30px;">msg Home</a></h1>
+  <ul>
+    <li><a href="#">로그인</a></li>
+    <li><a href="#">회원가입</a></li>
+  </ul>
+</header>
+<div>
+  <xmp class="code">
+
+  </xmp>
+
+  <!-- table#tblDept>(thead>tr>th*3>lorem1)+(tbody>tr*4>td*3>lorem1)+(tfoot>tr>td[colspan=3]>button) -->
+
+  <table id="tblDept">
+    <thead>
+        <tr>
+            <th><input type="checkbox" id="all">모두 선택</th>
+            <th>이름</th>
+            <th>지역</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input type="checkbox" id="ck1"></td>
+            <td>Nisi.</td>
+            <td>Nemo.</td>
+        </tr>
+        <tr>
+            <td><input type="checkbox" id="ck2"></td>
+            <td>Adipisci.</td>
+            <td>Illo.</td>
+        </tr>
+        <tr>
+            <td><input type="checkbox" id="ck3"></td>
+            <td>Officiis.</td>
+            <td>Inventore.</td>
+        </tr>
+        <tr>
+            <td><input type="checkbox" id="ck4"></td>
+            <td>Dolorum.</td>
+            <td>Nihil.</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" align="center"><button>선택확인</button></td>
+        </tr>
+    </tfoot>
+  </table>
+
+  <p id="demo"></p>
+
+</div>
+
+<script>
+    const ckbAll = document.querySelector("#tblDept > thead > tr > th:nth-child(1) > input");
+    // const totalckb  = document.querySelectorAll("input[type=checkbox][id^='ck']");
+    const ckbs = document.querySelectorAll("#tblDept > tbody input[id^='ck']");
+    
+    
+    console.log(ckbs.length);
+    ckbAll.onchange = function () { // click도 상관없음
+        // alert(this.checked); //true/false
+        for (let i = 0; i < ckbs.length; i++) {
+            ckbs[i].checked = this.checked;
+        }
+    }
+    
+    
+    // ckbs.onclick = function () {} 이벤트 안걸림
+    for (let i = 0; i < ckbs.length; i++) {
+        ckbs[i].onclick = function () {
+            let isCkbAllChecked = true;
+            for (let i = 0; i < ckbs.length; i++) {
+                isCkbAllChecked = ckbs[i].checked;
+                if (!isCkbAllChecked) break;
+            }// for
+            
+            ckbAll.checked = isCkbAllChecked; 
+        }
+        
+    }
+    
+    
+    const btnOK = document.querySelector("#tblDept > tfoot > tr > td > button");
+    const demo= document.querySelector("#demo");
+    btnOK.onclick = function () {
+        demo.innerHTML = ""; // 초기화
+
+        let content = "<ul>"
+        for (let i = 0; i < ckbs.length; i++) {
+            const ckb = ckbs[i];
+            if (ckb.checked) {
+                /* [1]
+                const tr = ckb.closest('tr'); // 체크박스가 속한 tr 찾기
+                const tds = tr.getElementsByTagName('td'); // tr 내의 모든 td 요소 가져오기
+                let name = tds[1].textContent; // 두 번째 td의 텍스트 추출
+                let region = tds[2].textContent; // 두 번째 td의 텍스트 추출
+                */
+                //[2] DOM 트리 탐색
+                const name = ckb.parentElement.nextElementSibling.textContent; // innerText도 가능
+                const region = ckb.parentElement.nextElementSibling.nextElementSibling.textContent;
+                
+                content += `<li>${ckb.id} / ${name} / ${region}</li>`;
+            }            
+        }
+        content += "</ul>";
+
+        demo.innerHTML = content;
+    }
+
+    for (var i = 0; i < ckbs.length; i++) {
+      const ckb = ckbs[i];
+
+      if ( ckb.checked ) {
+          // <tr>
+          const cktr = document.querySelector(`#tblDept > tbody > tr:nth-of-type(${i+1})`);
+          // children td/td[1] name / td[2] area
+          const name = cktr.children[1].textContent;
+          const area = cktr.children[2].textContent;
+         content += `<li>${ckb.id} / 이름: ${name} / 지역: ${area}</li>`;
+      } // if
+   } // for
+   content += "</ul>";
+
+    /*
+    const btn = document.querySelector("#tblDept > tfoot > tr > td > button");
+    btn.onclick = function () {
+        document.querySelectorAll("#tblDept > tbody input[id^='ck']:checked")
+        .forEach(element => {
+            const name = element.parentElement.nextElementSibling.textContent;
+            const region = element.parentElement.nextElementSibling.nextElementSibling.textContent;
+
+            const li = document.createElement("li");
+            li.innerText =`이름:${name}, 지역:${region}`;
+            $("#demo").append(li);
+
+        });
+        
+    }
+        */
+
+</script>
+</body>
+</html>
