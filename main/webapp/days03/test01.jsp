@@ -137,7 +137,7 @@
   				ir = list.iterator();
   				while(ir.hasNext()){
   					vo = ir.next();
-  					if(vo.getDname().equals(pdname)){
+  					if(vo.getDname().equals("<%= dname%>")){
   		%>
   		<tr>
   		  <td><input type="checkbox"></td>
