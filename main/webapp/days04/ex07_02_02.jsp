@@ -1,4 +1,3 @@
-<%@page import="java.util.Enumeration"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -30,29 +29,24 @@
    
   </xmp>
   
+  <%
+  	
+  
+  	String name = request.getParameter("name");
+  	// String age = request.getParameter("age");
+  %>
+  
   <form action="ex07_03.jsp">
   	address: <input type="text" name="address" value="서울 역삼동"><br>
   	tel: <input type="text" name="tel" value="010-111-111"><br>
   	<input type="button" value="Prev" onclick="history.back();">
   	<input type="submit" value="Next">
   	
+  	<input type="hidden" name="name" value="<%=name%>"><br><!-- 다음 페이지로 넘기고자 하는 목적 -->
+  	<%-- <input type="hidden" name="age" value="<%= age%>"><br> --%>
+  	<input type="hidden" name="age" value=`${param.age}`><br>
   </form>
   
-<script>
-	let hiddenElement;
-	<%
-		Enumeration<String> en = request.getParameterNames();
-		while(en.hasMoreElements()){
-			String pname = en.nextElement();
-			String pvalue = request.getParameter(pname);
-			// System.out.println(pname + " / " + pvalue);
-			%>
-			hiddenElement = `<input type="hidden" name="<%=pname%>" value="<%=pvalue%>">`
-			$("form").append(hiddenElement);
-			<%
-		}
-	%>
-</script>
 </div>
 </body>
 </html>
