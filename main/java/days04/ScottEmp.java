@@ -20,7 +20,7 @@ import org.doit.domain.EmpVO;
 import com.util.DBConn;
 
 
-@WebServlet("/scott/emp")
+/*@WebServlet("/scott/emp")*/
 public class ScottEmp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

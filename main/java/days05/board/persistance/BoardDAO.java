@@ -24,11 +24,14 @@ public interface BoardDAO {
 		BoardDTO view(long seq) throws SQLException;
 
 		// 4. 글 삭제 
-		/* int delete(long seq)throws SQLException; */
+		int delete(long seq)throws SQLException; 
 		int delete(long seq, String pwd) throws SQLException;
+		
+		String getOriginalPwd(long seq) throws SQLException;
 		
 		// 5. 글 수정하기
 		int update(BoardDTO dto) throws SQLException;
+		
 		
 		// 6. 글 검색 + 페이징 처리 X
 							//검색조건, 검색어
@@ -46,7 +49,8 @@ public interface BoardDAO {
 		int getTotalPages(int numberPerPage, String condition, String keyword) throws SQLException;
 		
 		// DB에서 비밀번호 가져오는 메서드
-		String getPwd(long seq) throws SQLException;
+		// [나]
+		// String getPwd(long seq) throws SQLException;
 		
 
 		

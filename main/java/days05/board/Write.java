@@ -16,7 +16,7 @@ import days05.board.domain.BoardDTO;
 import days05.board.persistance.BoardDAO;
 import days05.board.persistance.BoardDAOImpl;
 
-@WebServlet({"/cstvsboard/write.htm" })
+/*@WebServlet({"/cstvsboard/write.htm" })*/
 public class Write extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

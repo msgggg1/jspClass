@@ -10,6 +10,7 @@
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
   
+<!-- 
   <servlet>
   	<description>첫 번째 서블릿</description>
   	<description>현재 날짜/시간 정보 응답</description>
@@ -21,5 +22,16 @@
   	<url-pattern>/catalog</url-pattern>
   	<url-pattern>*.bop</url-pattern>
   </servlet-mapping>
+   -->
+   
+<!--    <error-page>
+   	<error-code>404</error-code>
+   	<location>/WEB-INF/error/404.jsp</location>
+   </error-page>
+
+   <error-page>
+    <exception-type>java.lang.NullPointerException</exception-type>
+   	<location>/WEB-INF/error/nullPointer.jsp</location>
+   </error-page> -->
   
 </web-app>

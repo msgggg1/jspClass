@@ -18,7 +18,7 @@ import org.doit.domain.DeptVO;
 
 import com.util.DBConn;
 
-@WebServlet("/scott/dept")
+/*@WebServlet("/scott/dept")*/
 public class ScottDept extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

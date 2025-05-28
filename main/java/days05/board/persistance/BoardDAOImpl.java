@@ -234,11 +234,14 @@ public class BoardDAOImpl implements BoardDAO {
 		return dto;
 	}
 
+	/*
+	 // 나
 	@Override
 	public String getPwd(long seq) throws SQLException {
 		String sql = "SELECT pwd FROM tbl_cstvsboard WHERE seq = ? ";
 		
 		this.pstmt = conn.prepareStatement(sql); // 오류 처리 X d/t throws (여기서 처리 안함)
+		this.pstmt.setLong(1, seq);
 		this.rs = this.pstmt.executeQuery();
 
 		String pwd =  null;
@@ -253,7 +256,53 @@ public class BoardDAOImpl implements BoardDAO {
 				
 		return pwd;
 	}
+	*/
 	
+	@Override
+	   public String getOriginalPwd(long seq) throws SQLException {
+	      String  originalPwd = null;
+
+	      String sql =   "  SELECT pwd "
+	                  + " FROM tbl_cstVSBoard "
+	                  + " WHERE seq = ? "; 
+
+	      try {         
+	         pstmt = conn.prepareStatement(sql);
+	         this.pstmt.setLong(1, seq); 
+	         rs = pstmt.executeQuery();
+	         
+	         if (rs.next()) { 
+	            originalPwd = rs.getString("pwd"); 
+	         } // if
+	      } catch (SQLException e) { 
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            rs.close();
+	            pstmt.close();
+	         } catch (SQLException e) {
+	            e.printStackTrace();
+	         }
+	      } 
+	      return originalPwd;
+	   } 
+	
+	// [A]
+	   public int delete(long seq, String pwd) throws SQLException {
+
+	      String sql = "DELETE FROM tbl_cstvsboard "
+	            + " WHERE seq = ? AND pwd = ? ";
+	      int rowCount = 0;
+
+	      this.pstmt = this.conn.prepareStatement(sql);
+	      this.pstmt.setLong(1, seq);
+	      this.pstmt.setString(2, pwd);
+	      rowCount = this.pstmt.executeUpdate();
+	      if(this.pstmt != null) this.pstmt.close();   
+	      return rowCount;
+	   }
+	
+	  /* 
 	@Override
 	public int delete(long seq, String pwd) throws SQLException {
 
@@ -270,6 +319,7 @@ public class BoardDAOImpl implements BoardDAO {
 
 		return rowCount;
 	}
+	*/
 
 	@Override
 	public int update(BoardDTO dto) throws SQLException {
@@ -551,6 +601,12 @@ public class BoardDAOImpl implements BoardDAO {
 		if (this.pstmt != null)this.pstmt.close();
 
 		return totalPages;
+	}
+
+	@Override
+	public int delete(long seq) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 

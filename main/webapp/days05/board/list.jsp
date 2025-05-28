@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	// /jspPro
@@ -68,7 +68,7 @@
 					<c:forEach items="${ list }" var="dto">
 						<tr>
 							<td>${ dto.seq }</td>
-							<td><a href="<%= contextPath%>/cstvsboard/view.htm?seq=${ dto.seq }">${ dto.title }</a></td>
+							<td><a class="title" href="<%= contextPath%>/cstvsboard/view.htm?seq=${ dto.seq }">${ dto.title }</a></td>
 							<td>${ dto.writer }</td>
 							<td>${ dto.writedate }</td>
 							<td>${ dto.readed }</td>
@@ -76,11 +76,53 @@
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
+			<script>
+				$("a.title").attr("href", function(index, oldHref){
+					let npp = ${pvo.numberPerPage};
+					return `\${oldHref}&currentPage=${param.currentPage}&numberPerPage=\${npp}&searchCondition=${param.searchCondition}&searchWord=${param.searchWord}`;
+				});
+			</script>			
 		</tbody>
 		<tfoot>
 			<tr>
 				<td colspan="5" align="center">
-					[1] 2 3 4 5 6 7 8 9 10 next
+					<!-- [1] 2 3 4 5 6 7 8 9 10 next -->
+					<div class="pagination">
+					<c:if test="${pvo.prev }">
+						<a href="${pvo.start -1 }">&lt;</a>
+					</c:if>
+					<c:forEach begin="${pvo.start }" end="${pvo.end }" step ="1" var="i">
+						<c:choose>
+							<c:when test="${pvo.currentPage eq i }">
+								<a href="${i}" class="active">${i}</a>					
+							</c:when>
+							<c:otherwise>
+								<a href="${i}">${i}</a>					
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+					<c:if test="${pvo.next}">
+						<a href="${pvo.end + 1 }">&gt;</a>
+					</c:if>
+					</div>
+					<script>
+						$(".pagination a:not(.active)").attr("href", function(index, oldHref){
+							let npp = ${pvo.numberPerPage};
+							let sc = '${param.searchCondition}';
+							let sw = '${param.searchWord }';
+							//alert("["  +sw + "]");
+							
+							return `/jspPro/cstvsboard/list.htm?currentPage=\${oldHref}&numberPerPage=\${npp}&searchCondition=\${sc}&searchWord=\${sw}`;							
+							<%--if (${param.searchWord} == null && ${param.searchWord} =="") {
+								return `/jspPro/cstvsboard/list.htm?currentPage=\${oldHref}&numberPerPage=\${npp}`;							
+							} else {
+							} --%>
+						});
+						
+						$(".pagination a.active").on("click", function(){
+								event.preventDefault();
+						});
+					</script>
 				</td>
 			</tr>
 			<tr>
@@ -108,6 +150,13 @@
 <c:if test='${param.write eq "fail"}'>
 	alert("글 쓰기 실패");
 </c:if>
+</script>
+
+<script>
+// list.htm?searchCondition=w&searchWord=
+$("#searchCondition").val("${empty param.searchCondition ? "t" : param.searchCondition}");
+$("#searchWord").val("${param.searchWord}");	
+	
 </script>
 </body>
 </html>

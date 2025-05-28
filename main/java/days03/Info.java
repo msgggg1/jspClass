@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/method/Info.htm")
+/*@WebServlet("/method/Info.htm")*/
 public class Info extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

@@ -13,10 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.util.DBConn;
 
 import days05.board.domain.BoardDTO;
+import days05.board.domain.PagingVO;
 import days05.board.persistance.BoardDAO;
 import days05.board.persistance.BoardDAOImpl;
 
-@WebServlet({ "/List", "/cstvsboard/list.htm" })
+/*@WebServlet({"/cstvsboard/list.htm" })*/
 public class List extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -37,6 +38,8 @@ public class List extends HttpServlet {
     // list.htm 				null => 1
     // list.htm?currentPage=3	
     // list.htm?numberPerPage=15
+    // 검색
+    // list.htm?searchCondition=c&searchWord=%EC%83%88%EA%B8%80
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// [2] DB처리
 		System.out.println("> List.doGet()...");
@@ -61,20 +64,24 @@ public class List extends HttpServlet {
 			searchCondition = request.getParameter("searchCondition");
 		} catch (Exception e) {
 			// null
-			searchCondition = "title";
+			searchCondition = "t";
+			
 		}		
-		
-		String searchWord = request.getParameter("searchWord"); // null ""
+		String searchWord = request.getParameter("searchWord"); /// null ""
 		
 		Connection conn = DBConn.getConnection();
 		BoardDAO dao = new BoardDAOImpl(conn);
+		
 		java.util.List<BoardDTO> list = null;
+		PagingVO pvo = null;
 		
 		try {
-			if (searchWord == null || searchWord.equals("")) {
+			if (searchWord == null || searchWord.equals("")) { // 목록 출력
+				pvo= new PagingVO(currentPage, numberPerPage, this.numberOfPageBlock);
 				list = dao.select(currentPage, numberPerPage);
-			} else {
-				list = dao.search(searchCondition, searchWord, currentPage, numberPerPage);
+			} else { // 검색한 목록
+				pvo = new PagingVO(currentPage, numberPerPage, numberOfPageBlock, searchCondition, searchWord.trim());
+				list = dao.search(searchCondition, searchWord.trim(), currentPage, numberPerPage);
 			}
 		} catch (Exception e) {
 			System.out.println("> List.doGet() exception");
@@ -84,6 +91,7 @@ public class List extends HttpServlet {
 		
 		// [3]포워딩
 		request.setAttribute("list", list);
+		request.setAttribute("pvo", pvo);
 		
 		String path = "/days05/board/list.jsp";
 		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
