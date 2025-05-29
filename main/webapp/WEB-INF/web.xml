@@ -33,5 +33,31 @@
     <exception-type>java.lang.NullPointerException</exception-type>
    	<location>/WEB-INF/error/nullPointer.jsp</location>
    </error-page> -->
+   
+ <!--   p.178
+ <jsp-config>
+   	<jsp-property-group>
+   		<url-pattern>/days07/*</url-pattern>
+   		<include-prelude>/WEB-INF/inc/include.jspf</include-prelude>
+   	</jsp-property-group>
+   </jsp-config> 
+-->
+
+<!-- application 객체 전체에서 사용할 변수 -->
+	<context-param>
+		<description>DB 사용자 계정</description>
+		<param-name>user</param-name>
+		<param-value>scott</param-value>
+	</context-param>
+	<context-param>
+		<description>DB 비밀번호</description>
+		<param-name>password</param-name>
+		<param-value>tiger</param-value>
+	</context-param>
+	<context-param>
+		<description>게시판 다운로드 경로</description>
+		<param-name>path</param-name>
+		<param-value>/days06</param-value>
+	</context-param>
   
 </web-app>
