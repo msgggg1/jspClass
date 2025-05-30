@@ -70,7 +70,7 @@ public class Write extends HttpServlet {
 		// -> 리다이렉트
 		//String path = "/days05/board/list.jsp";
 		//String path = "/days05/cstvsboard/list.htm";
-		String location = "/jspPro/cstvsboard/list.htm?write="; // 클라이언트에서 리다이렉트 -> contextPath 부터 경로 줘야. 서버: 서버안임 -> contextPatg 필요 x
+		String location = "/jspPro/board/list.do?write="; // 클라이언트에서 리다이렉트 -> contextPath 부터 경로 줘야. 서버: 서버안임 -> contextPatg 필요 x
 		location+= rowCount == 1 ? "success" : "fail";
 		response.sendRedirect(location);
 	}

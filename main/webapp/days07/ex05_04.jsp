@@ -10,7 +10,7 @@
 		
 		Cookie c = new Cookie(cookieName, "");
 		c.setPath("/");
-		c.setMaxAge(0); 
+		c.setMaxAge(0); // 가자마자 삭제
 		response.addCookie(c);
 		
 	}

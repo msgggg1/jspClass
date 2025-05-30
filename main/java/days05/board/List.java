@@ -26,7 +26,6 @@ public class List extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-
     //[1]
     int currentPage = 1; 	// 현재 페이지 번호
     int numberPerPage = 10; // 한 페이지에 출력할 게시글 수
