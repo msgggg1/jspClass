@@ -15,7 +15,7 @@
 		
 		logonId = cookies.getValue(cookieName);
 		
-		Cookie c =Cookies.createCookie(cookieName, "X", "/", 0);
+		Cookie c = Cookies.createCookie(cookieName, "X", "/", 0);
 
 		response.addCookie(c);
 		
