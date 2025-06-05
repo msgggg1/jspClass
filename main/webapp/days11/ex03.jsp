@@ -10,7 +10,6 @@
 <%
 	String contextPath = request.getContextPath();
 %>
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
    Connection conn = null;
@@ -56,68 +55,6 @@
 	   }
    } // try 
 %>
-<%	
-	String pDeptno = request.getParameter("deptno");
-	int pdeptno = 10;
-	try{
-		pdeptno = deptno = Integer.parseInt(pDeptno);
-	} catch(Exception e){
-		pdeptno = deptno = 10; // 안넘어오면 10번으로 처리
-	}
-	
-   sql =  " SELECT empno, ename, job, mgr,  "
-		   	+ " TO_CHAR(hiredate, 'yyyy-MM-dd') hiredate, sal, comm, deptno "
-		    + " FROM emp "
-		    + "  WHERE deptno = ? ";
-   
-   	int empno, mgr;
-	String ename, job;
-	Date hiredate;
-	double sal, comm ;
-	   
-   EmpVO evo = null;
-   ArrayList<EmpVO> elist = null;
-   Iterator<EmpVO> eir = null;
-   
-   try{
-	   conn = DBConn.getConnection();
-	   //System.out.println("> conn = " + conn);
-	   //System.out.println("> isClosed = " + conn.isClosed() );
-	   pstmt = conn.prepareStatement(sql);
-	   pstmt.setInt(1, deptno);
-	   rs = pstmt.executeQuery();
-	   if( rs.next() ){
-		   elist = new ArrayList<>();
-		   do{
-				empno = rs.getInt("empno");
-				ename = rs.getString("ename");
-				job = rs.getString("job");				
-				mgr = rs.getInt("mgr");
-				hiredate =  rs.getDate("hiredate");
-				sal = rs.getDouble("sal");
-				comm = rs.getDouble("comm");
-			   	deptno = rs.getInt("deptno");
-				
-				evo = new EmpVO().builder()
-						.empno(empno).ename(ename).job(job).mgr(mgr).hiredate(hiredate).sal(sal).comm(comm).deptno(deptno)
-						.build(); 
-				
-				
-			   elist.add(evo);
-		   }while( rs.next() );
-	   } // if
-   }catch(Exception e){
-	   e.printStackTrace();
-   }finally{
-	   try{
-		 pstmt.close();  
-		 rs.close();
-	     DBConn.close();
-	   }catch(Exception e){
-		   e.printStackTrace();
-	   }
-   } // try 
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -155,16 +92,13 @@
         	deptno = dvo.getDeptno();
         	dname = dvo.getDname();
    %>
-<%--    <option value="<%= deptno %>"<%= (deptno == pdeptno ) ? "selected" : "" %>>
-   					<%= dname %></option> 
- --%>   
  		<option value="<%= deptno %>"><%= dname %></option> 
    <%        	
         } // while
     %>
   </select>
   
-  <h2>emp list - <%= pdeptno %></h2>
+  <h2>emp list</h2>
   <table>
   	<thead>
   	  <tr>
@@ -180,45 +114,11 @@
   	 </tr>
   	</thead>
   	<tbody>
-  		<!-- list == null  사원존재 x -->
-  		<%
-  			if(elist == null){
-  		%>
-  		
-  		<tr>
-  			<td colspan="9">사원이 존재 X</td>
-  		</tr>
-  		
-  		<%
-  			}else{
-  				eir = elist.iterator();
-  				while(eir.hasNext()){
-  					evo = eir.next();
-  		%>	
-  		<tr>
-  		  <td><input type="checkbox" id="ckb-<%= evo.getEmpno()%>" 
-  		  		name=""
-  		  		data-empno="<%= evo.getEmpno() %>"
-  		  		value="<%= evo.getEmpno() %>"></td>
-  		  <td><%= evo.getEmpno() %></td>
-  		  <td><%= evo.getEname() %></td>
-  		  <td><%= evo.getJob() %></td>
-  		  <td><%= evo.getMgr() %></td>
-  		  <td><%= evo.getHiredate() %></td>
-  		  <td><%= evo.getSal() %></td>
-  		  <td><%= evo.getComm() %></td>
-  		  <td><%= evo.getDeptno() %></td>
-  		</tr>
-  		
-  		<%
-  				} //while
-  			}// if
-  		%>
   	</tbody>
 	<tfoot>
 		<tr>
 			<td colspan="9">
-				<span class="badge left red"><%= elist==null ? 0 : elist.size()%>명</span>
+				<span class="badge left red">x명</span>
 				<a href="javascript:history.back()">뒤로가기기</a>
 				<button>선택한 empno 확인</button>
 			</td>
@@ -226,17 +126,64 @@
 	</tfoot>
   </table>
   
+  <p id="demo"></p>
 </div>
 
 <script>
 	$("#deptno").on("change", function(){
 		let deptno = $(this).val()
-		//					/jspPro
-		location.href = `<%= contextPath%>/days03/ex01.jsp?deptno=\${deptno}`;
+		
+		$.ajax({
+				url: "ex03_empjson_lib.jsp"
+				, type : "GET"
+				, data : {deptno:deptno}
+				, cache: false  
+				, dataType: "json"
+				, success : function(data, textStatus, jqXHR){ 
+					// console.log( data.emp );                  
+	                  $("span.badge").text( `\${data.emp.length} 명` );
+	                  
+	                  $("table tbody").empty();
+	                  
+	                  if(data.emp.length == 0 ){
+	                     $("table tbody").append(
+	                           `<tr>
+	                           <td colspan="9">사원이 존재 X</td>
+	                         </tr>`
+	                           );
+	                  } else{                      
+	                   $(data.emp).each(function (index, emp ){
+	                     $("table tbody").append(
+	                        `<tr>
+	                             <td><input type="checkbox" id="ckb-\${ emp.empno } %>"
+	                              name="" 
+	                              data-empno="\${ emp.empno }"
+	                              value="\${ emp.ename }"></td>
+	                           <td>\${ emp.empno }</td>
+	                           <td>\${ emp.empno }</td>
+	                           <td>\${ emp.job }</td>
+	                           <td>\${ emp.mgr }</td>
+	                           <td>\${ emp.hiredate }</td>
+	                           <td>\${ emp.sal }</td>
+	                           <td>\${ emp.comm }</td>
+	                           <td>\${ emp.deptno }</td>         
+	                          </tr>`
+	                           );                     
+	                  });                   
+	                  } 
+				}
+				, error: function(){
+					alert("에러")
+				}
+			});
+
 	});
 	
-	//EL(표현언어) request.getParameter("deptno")
-	$("#deptno").val(${param.deptno}); 
+	// 이벤트 트리거 == change 이벤트 select 태그에 발생시키는 코딩
+	$("#deptno").change(); 
+	
+	//EL(표현언어) request.getParameter("deptno") -> ajax 상태 관리 필요 없음
+	// $("#deptno").val(${param.deptno}); 
 </script>
 <script>
 
