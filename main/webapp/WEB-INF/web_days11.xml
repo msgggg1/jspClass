@@ -36,5 +36,22 @@
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
+	
+	<!-- p 704 코딩 그대로 -->
+  <servlet>
+      <description>서블릿 3.1 파일 업로드 테스트</description>
+      <servlet-name>uploadServlet</servlet-name>
+      <servlet-class>days11.UploadServlet</servlet-class>
+      <multipart-config>
+         <location>C:\Tools\apache-tomcat-9.0.104\temp</location>
+         <max-file-size>-1</max-file-size>   
+         <max-request-size>-1</max-request-size>
+         <file-size-threshold>1024</file-size-threshold>
+      </multipart-config>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>uploadServlet</servlet-name>
+      <url-pattern>/days11/upload</url-pattern>
+   </servlet-mapping>
 
 </web-app>
