@@ -80,7 +80,7 @@
   				content : message
   		});
   		
-  		infoWindow.open(map, mapCenter);
+  		infoWindow.open(map, marker);
   	};
   </script>
   
