@@ -40,7 +40,28 @@
   <script>
   	$(function(){
   		$(":button").on("click", function(){
-  			  			
+  			 
+  			fetch("ex02_empjson_lib.jsp", {
+                 method: "GET",
+                 cache: "no-cache" // jQuery의 cache: false와 동일한 효과
+             })
+             .then(response => {
+                 if (!response.ok) {
+                     throw new Error("Network response was not ok");
+                 }
+                 return response.json(); // JSON 형식으로 파싱
+             })
+             .then(data => {
+                 data.emp.forEach(emp => {
+                     $("#cmbEmp").append(`<option value='\${ emp.empno}'>\${ emp.ename}</option>`);
+                        $("#demo").append(`<li>\${ emp.empno} : \${ emp.ename}</li>`); 
+                 });
+             })
+             .catch(error => {
+                 alert("에러~~");
+                 console.error("Fetch error:", error);
+             });
+  			/* 			
   			$.ajax({
   				url: "ex02_empjson_lib.jsp"
   				, type : "GET"
@@ -58,6 +79,45 @@
   					alert("에러")
   				}
   			});
+  			*/
+  			
+  		// [3]  
+  		  $(function (){
+  		      const params = { deptno: 30, job: "CLERK" }; 
+  		     
+  		       $("#btn1").on("click", function (){   
+  		       // URLSearchParams를 이용해 쿼리 문자열 생성
+  		          const queryString = new URLSearchParams(params).toString();
+  		          alert( queryString)
+
+  		          // 최종 URL에 쿼리 문자열 추가
+  		          fetch(`ex01_emp_json_lib.jsp?\${queryString}`, {
+  		              method: "GET",
+  		              cache: "no-cache"
+  		          })
+  		          .then(response => {
+  		              if (!response.ok) {
+  		                  throw new Error("Network response was not ok");
+  		              }
+  		              return response.json();
+  		          })
+  		          .then(data => {
+  		             $("#cmbEmp").empty();
+  		             $("#demo").empty();
+  		              data.emp.forEach(emp => {
+  		                 $("#cmbEmp").append(`<option value='\${ emp.empno}'>\${ emp.ename}</option>`);
+  		                   $("#demo").append(`<li>\${ emp.empno} : \${ emp.ename}</li>`);
+  		              });
+  		          })
+  		          .catch(error => {
+  		              alert("에러~~");
+  		              console.error("Fetch error:", error);
+  		          });
+  		          
+  		       }); // click       
+  		  }); // ready 
+  			
+  			
   		})
   	});
   </script>

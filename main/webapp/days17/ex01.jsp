@@ -111,6 +111,109 @@
 		  
  		
    3. 				: async, await 키워드
+   					 async 붙어있는 함수 : 비동기 처리하는 함수
+   					 await : 결과물 돌려줄때까지 blocking
+   
+		   [ fetch API를 async/await 문법으로 사용하는 방법 ]
+		  a. async/await를 사용한 fetch 기본 형식
+		  async function fetchData() {
+		    try {
+		        const response = await fetch("URL");
+		
+		        if (!response.ok) {
+		            throw new Error(`HTTP error! status: ${response.status}`);
+		        }
+		
+		        const data = await response.json();  // 또는 .text(), .blob() 등
+		        console.log(data);
+		    } catch (error) {
+		        console.error("에러 발생:", error);
+		    }
+		}
+		
+		b. 예제 1: GET 요청
+		    async function loadEmployees() {
+		    try {
+		        const response = await fetch("ex02_empjson_lib.jsp");
+		
+		        if (!response.ok) {
+		            throw new Error("서버 오류");
+		        }
+		
+		        const data = await response.json();
+		
+		        data.emp.forEach(emp => {
+		            document.querySelector("#cmbEmp").insertAdjacentHTML("beforeend",
+		                `<option value='${emp.empno}'>${emp.ename}</option>`);
+		            document.querySelector("#demo").insertAdjacentHTML("beforeend",
+		                `<li>${emp.empno} : ${emp.ename}</li>`);
+		        });
+		    } catch (err) {
+		        alert("에러~~");
+		        console.error(err);
+		    }
+		}
+		
+		loadEmployees(); // 함수 호출
+		
+		
+		b. 예제 2: POST 요청 (JSON 전송)
+		  async function saveEmployee() {
+		      const empData = { empno: 1234, ename: "JANE" };
+		
+		    try {
+		        const response = await fetch("save_emp.jsp", {
+		            method: "POST",
+		            headers: {
+		                "Content-Type": "application/json"
+		            },
+		            body: JSON.stringify(empData)
+		        });
+		
+		        if (!response.ok) {
+		            throw new Error("응답 실패");
+		        }
+		
+		        const result = await response.json();
+		        console.log("서버 응답:", result);
+		    } catch (err) {
+		        console.error("전송 실패:", err);
+		    }
+		}
+		c. 
+		| 기능        | 사용법                            |
+		| ------      | --------------------------------- |
+		| 비동기 요청 | `await fetch(...)`                |
+		| 응답 파싱   | `await response.json()`           |
+		| 에러 처리   | `try { ... } catch (err) { ... }` |
+		  
+		  -->
+		<!-- 
+		 [ FormData로 전송하는 예제, 파일 업로드 방식 ]   
+		 
+		  --> 
+		<%-- [ 1. fetch api 로 변경 ]
+		fetch("ex10_emp_json_lib.jsp", {
+		    method: "GET",
+		    cache: "no-cache" // jQuery의 cache: false와 동일한 효과
+		})
+		.then(response => {
+		    if (!response.ok) {
+		        throw new Error("Network response was not ok");
+		    }
+		    return response.json(); // JSON 형식으로 파싱
+		})
+		.then(data => {
+		    data.emp.forEach(emp => {
+		        $("#cmbEmp").append(`<option value='${emp.empno}'>${emp.ename}</option>`);
+		        $("#demo").append(`<li>${emp.empno} : ${emp.ename}</li>`);
+		    });
+		})
+		.catch(error => {
+		    alert("에러~~");
+		    console.error("Fetch error:", error);
+		});
+		 --%>
     
   </xmp>
 </div>
